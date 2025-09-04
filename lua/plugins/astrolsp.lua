@@ -1,5 +1,3 @@
-if true then return {} end -- WARN: REMOVE THIS LINE TO ACTIVATE THIS FILE
-
 -- AstroLSP allows you to customize the features in AstroNvim's LSP configuration engine
 -- Configuration documentation can be found with `:h astrolsp`
 -- NOTE: We highly recommend setting up the Lua Language Server (`:LspInstall lua_ls`)
@@ -39,7 +37,7 @@ return {
     },
     -- enable servers that you already have installed without mason
     servers = {
-      -- "pyright"
+      "ocamllsp",
     },
     -- customize language server configuration options passed to `lspconfig`
     ---@diagnostic disable: missing-fields
@@ -81,6 +79,24 @@ return {
     mappings = {
       n = {
         -- a `cond` key can provided as the string of a server capability to be required to attach, or a function with `client` and `bufnr` parameters from the `on_attach` that returns a boolean
+        K = {
+          function() vim.lsp.buf.hover() end,
+          desc = "Hover symbol details",
+        },
+        [",gg"] = {
+          function() vim.lsp.buf.definition() end,
+          desc = "Definition of current symbol",
+          cond = "textDocument/definition",
+        },
+
+        [",en"] = {
+          function()
+            local jump_opts = {}
+            jump_opts.count = vim.v.count1
+            vim.diagnostic.jump(jump_opts)
+          end,
+          desc = "Go to next error",
+        },
         gD = {
           function() vim.lsp.buf.declaration() end,
           desc = "Declaration of current symbol",
